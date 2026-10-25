@@ -26,3 +26,5 @@ In the `output` directory, you should have as many subdirectories as there are U
 - Use Chrome as the main browser.
 - It is recommended (but not mandatory for this exercise) to write tests.
 - Important: Ensure efficient runtime by considering asynchronous and parallel processing.
+
+
