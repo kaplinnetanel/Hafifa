@@ -17,3 +17,6 @@ venv/
 # Editor files
 .vscode/
 .idea/
+
+# Generated threading results
+threading_multiprocessing/results.csv
