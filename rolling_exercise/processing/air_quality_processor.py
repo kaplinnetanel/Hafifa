@@ -1,4 +1,5 @@
-from calculate_aqi import calculate_aqi
+from processing.calculate_aqi import calculate_aqi
+from logger import logger
 
 def process_air_quality(valid_rows):
 
@@ -7,5 +8,6 @@ def process_air_quality(valid_rows):
 
       row["aqi"] = aqi
       row["level"] = level 
+      logger.info(f"City: {row['city']}, Date: {row['date']}, "f"AQI: {aqi}, Level: {level}")
       
     return valid_rows

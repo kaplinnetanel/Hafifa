@@ -1,29 +1,44 @@
 import pandas as pd
+from logger import logger
+
 
 def validate_data(df):
     valid_rows = []
 
+    
+    logger.info(f"Starting validation of {len(df)} rows")
     if has_missing_columns(df):
+        logger.error("CSV validation failed: missing required columns")
         return None
     
     for index , row in df.iterrows():
         if has_missing_values(row):
+            logger.warning(f"Row {index + 1}: missing values")
             continue
 
         if has_invalid_number(row):
+            logger.warning(f"Row {index + 1}: invalid numeric value")
             continue
 
         if has_negative_values(row):
+            logger.warning(f"Row {index + 1}: negative pollutant value")
             continue
 
         if has_invalid_date(row):
+            logger.warning(f"Row {index + 1}: invalid date")
             continue
 
         if has_invalid_city(row):
+            logger.warning(f"Row {index + 1}: invalid city")
             continue
 
+            
+        for column in ["PM2.5", "NO2", "CO2"]:
+            row[column] = float(row[column])
+            
         valid_rows.append(row.to_dict())
 
+    logger.info(f"Validation completed: {len(valid_rows)} valid rows")
     return valid_rows
 
 

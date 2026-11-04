@@ -20,3 +20,9 @@ venv/
 
 # Generated threading results
 threading_multiprocessing/results.csv
+
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+logs/
