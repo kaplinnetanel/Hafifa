@@ -3,7 +3,12 @@ from database.connection import engine
 from database.models import AirQuality, Alerts
 from datetime import date
 from sqlalchemy import select ,func
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+
+ALERT_AQI_THRESHOLD = int(os.getenv("ALERT_AQI_THRESHOLD", "300"))
 
 def save_air_quality(rows):
     with Session(engine) as session :
@@ -20,7 +25,7 @@ def save_air_quality(rows):
             )
             session.add(record)
 
-            if row["aqi"] > 300:
+            if row["aqi"] > ALERT_AQI_THRESHOLD:
                 alert = Alerts( 
                     date = parsed_date,
                     city =  row["city"],
@@ -48,16 +53,13 @@ def get_city_aqi_history(city: str):
             query  = select(AirQuality.aqi, AirQuality.date).where(AirQuality.city == city).order_by(AirQuality.date)
             result = session.execute(query).all()
             return result
-
 def get_city_aqi_average(city: str):
-    with Session (engine) as session:
-        query  = select(AirQuality).where(AirQuality.city == city)
-        result = session.scalars(query).all()
-        if not result:
-            return None
-        
-        sum_city = sum(row.aqi for row in result)
-        return sum_city/len(result)
+    with Session(engine) as session:
+        query = select(func.avg(AirQuality.aqi)).where(
+            AirQuality.city == city
+        )
+
+        return session.scalar(query)
 
 def get_best_cities():
      with Session (engine) as session:

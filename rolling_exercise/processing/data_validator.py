@@ -32,10 +32,11 @@ def validate_data(df):
             logger.warning(f"Row {index + 1}: invalid city")
             continue
 
-            
+        row["date"] = pd.to_datetime(row["date"]).date().isoformat()       
         for column in ["PM2.5", "NO2", "CO2"]:
             row[column] = float(row[column])
-            
+
+        
         valid_rows.append(row.to_dict())
 
     logger.info(f"Validation completed: {len(valid_rows)} valid rows")
@@ -53,14 +54,8 @@ def has_missing_columns(df):
 
 
 def has_missing_values(row):
-
-    value = pd.isna(row)
-    if any(value):
-        print(value[value].index)
-
-        return True
-    
-    return False 
+    required_columns = ["date", "city", "PM2.5", "NO2", "CO2"]
+    return row[required_columns].isna().any()
 
 def has_invalid_number(row):
 
